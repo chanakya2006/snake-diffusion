@@ -80,6 +80,8 @@ def _generate_and_save_sample_imgs(
 
     _save_sample_imgs(real_imgs, [gen_10_imgs, gen_5_imgs, gen_2_imgs], f"val_images/{epoch}.png")
 
+# python src/train.py --model-type edm --output-prefix models/model --dataset training_data --gen-val-images
+
 @click.command()
 @click.option('--config', help='Config for training', metavar='YAML', type=str, required=True, default="config/Diffusion.yaml")
 @click.option('--model-type', type=click.Choice(['ddpm', 'edm'], case_sensitive=False), default='edm')

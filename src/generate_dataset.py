@@ -5,6 +5,9 @@ from utils.utils import EasyDict, instantiate_from_config
 from q_agent import QAgent, QAgentConfig
 from game.env import Environment
 
+#run this to start generating game
+#python src/generate_dataset.py --model agent.pth --dataset training_data --record
+
 @click.command()
 @click.option('--config', help='Config for generation', metavar='YAML', type=str, required=True, default="config/SnakeAgent.yaml")
 @click.option('--model', help='Path to save model', type=str, required=True)
@@ -14,11 +17,12 @@ from game.env import Environment
 @click.option('--show-plot', help='Show plot', is_flag=True, required=False, default=False)
 @click.option('--last-checkpoint', help='Path of checkpoint to resume the training', type=str, required=False)
 def main(**kwargs):
+    # print(kwargs) => {'model': 'agent.pth', 'dataset': 'training_data', 'record': True, 'config': 'config/SnakeAgent.yaml', 'clear_dataset': False, 'show_plot': False, 'last_checkpoint': None}
     options = EasyDict(kwargs)
     with open(options.config, 'r') as f:
         config = EasyDict(**yaml.safe_load(f))
     env: Environment = instantiate_from_config(config.env)
-    q_agent_config = QAgentConfig(**instantiate_from_config(config.q_agent))
+    q_agent_config = QAgentConfig(**instantiate_from_config(config.q_agent)) # Dataclass does nothing but store data.
     q_agent = QAgent(env, q_agent_config, options.model, options.dataset, options.get("last_checkpoint", None))
     q_agent.train(options.show_plot, options.record, options.clear_dataset)
 
